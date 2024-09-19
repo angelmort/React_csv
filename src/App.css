@@ -75,6 +75,8 @@ ul {
   list-style-type: none;
   padding: 0;
   margin-top: 20px;
+  max-height: 200px; /* リストの最大高さを設定 */
+  overflow-y: auto; /* コンテンツが最大高さを超えた場合に垂直スクロール */
 }
 
 li {
@@ -116,7 +118,7 @@ li button:hover {
   color: #fff;
 }
 
-/* CSV保存ボタンのスタイル */
+/* CSV選択ボタン */
 .save-button {
   margin-top: 20px;
   background-color: #007bff;
