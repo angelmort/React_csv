@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import './App.css';
-import ProductForm from './ProductForm'; // 商品登録フォーム用コンポーネント
-import ProductList from './ProductList'; // 商品リスト表示用コンポーネント
-import CsvLoad from './CsvLoad'; // CSV読み込み用コンポーネント
-import CsvSave from './CsvSave'; // CSV保存用コンポーネント
+import ProductForm from '../component/ProductForm'; // 商品登録フォーム用コンポーネント
+import ProductList from '../component/ProductList'; // 商品リスト表示用コンポーネント
+import CsvLoad from '../component/CsvLoad'; // CSV読み込み用コンポーネント
+import CsvSave from '../component/CsvSave'; // CSV保存用コンポーネント
 
 function App() {
   // CSVデータを管理するための状態
