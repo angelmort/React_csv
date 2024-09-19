@@ -1,89 +1,47 @@
 import React, { useState } from 'react';
 import './App.css';
-import Papa from 'papaparse';
-import { saveAs } from 'file-saver';
+import ProductForm from '../component/ProductForm'; // 商品登録フォーム用コンポーネント
+import ProductList from '../component/ProductList'; // 商品リスト表示用コンポーネント
+import CsvLoad from '../component/CsvLoad'; // CSV読み込み用コンポーネント
+import CsvSave from '../component/CsvSave'; // CSV保存用コンポーネント
 
 function App() {
-  const [productName, setProductName] = useState('');
-  const [productCode, setProductCode] = useState('');
-  const [description, setDescription] = useState('');
+  // CSVデータを管理するための状態
   const [csvData, setCsvData] = useState([]);
 
-  // 入力変更を処理する関数
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-
-    if (name === 'productName') setProductName(value);
-    if (name === 'productCode') setProductCode(value);
-    if (name === 'description') setDescription(value);
+  // 新しい商品をリストに追加する関数
+  const handleAddProduct = (newProduct) => {
+    setCsvData([...csvData, newProduct]); // 既存のデータに新しい商品を追加
   };
 
-  // 入力を更新する関数
-  const handleSubmit = (e) => {
-    e.preventDefault();
-    // 新しい商品のデータを作成
-
-    // 追加の処理が必要な場合はここに記述
+  // 商品をリストから削除する関数
+  const handleDeleteProduct = (index) => {
+    const updatedData = csvData.filter((_, i) => i !== index); // 削除する商品のインデックスを除外
+    setCsvData(updatedData); // 更新されたデータを状態に設定
   };
 
-  // CSVに保存する関数
-  const saveToCsv = () => {
-    const newData = [{ productName, productCode, description }];
-    setCsvData([...csvData, ...newData]);
-    const csv = Papa.unparse([...csvData, ...newData]);
-    const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
-    saveAs(blob, 'products.csv');
-  };
-
-  // CSVからデータを読み込む関数
-  const handleFileUpload = (e) => {
-    const file = e.target.files[0];
-    Papa.parse(file, {
-      complete: (result) => {
-        setCsvData(result.data);
-      },
-      header: true,
-    });
+  // CSVファイルから読み込まれたデータを設定する関数
+  const handleCsvDataLoad = (data) => {
+    setCsvData(data); // 読み込まれたデータを状態に設定
   };
 
   return (
     <div className="App">
       <h1>商品登録フォーム</h1>
-      <form>
-        <input
-          type="text"
-          name="productName"
-          value={productName}
-          onChange={handleInputChange}
-          placeholder="商品名"
-        />
-        <input
-          type="text"
-          name="productCode"
-          value={productCode}
-          onChange={handleInputChange}
-          placeholder="商品コード"
-        />
-        <textarea
-          name="description"
-          value={description}
-          onChange={handleInputChange}
-          placeholder="説明"
-        ></textarea>
-        <button type="button" onClick={saveToCsv}>
-          CSVに保存
-        </button>
-      </form>
-      <h2>CSVファイルを読み込む</h2>
-      <input type="file" accept=".csv" onChange={handleFileUpload} />
+
+      {/* 商品登録フォームコンポーネント */}
+      <ProductForm onAddProduct={handleAddProduct} />
+
+      {/* CSV読み込み用コンポーネント */}
+      <CsvLoad onCsvDataLoad={handleCsvDataLoad} />
+
       <h2>登録された商品</h2>
-      <ul>
-        {csvData.map((item, index) => (
-          <li key={index}>
-            {item.productName}, {item.productCode}, {item.description}
-          </li>
-        ))}
-      </ul>
+
+      {/* 商品リスト表示用コンポーネント */}
+      <ProductList products={csvData} onDeleteProduct={handleDeleteProduct} />
+
+      {/* CSV保存用コンポーネント */}
+      <CsvSave csvData={csvData} />
     </div>
   );
 }
